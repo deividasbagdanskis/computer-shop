@@ -27,6 +27,13 @@ namespace ComputerShop
         {
             services.AddControllersWithViews();
 
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddDbContext<ComputerShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ComputerShopContext")));
         }
@@ -44,6 +51,7 @@ namespace ComputerShop
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

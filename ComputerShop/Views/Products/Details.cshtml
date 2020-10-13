@@ -28,10 +28,10 @@
             </dd>
             <div class="form-group">
                 <label for="quantity">Quantity:</label>
-                <input id="quantiy" type="number" />
+                <input id="quantity" name="quantity" type="number" />
             </div>
 
-            <button type="button" class="btn btn-primary">Add to cart</button>
+            <a class="btn btn-primary" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id">Add to cart</a>
         </div>
     </div>
 </div>
