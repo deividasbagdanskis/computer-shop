@@ -1,6 +1,6 @@
 using System;
 
-namespace ComputerShop.Models
+namespace ComputerShop.ViewModels
 {
     public class ErrorViewModel
     {
