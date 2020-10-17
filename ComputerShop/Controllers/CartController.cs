@@ -8,16 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using ComputerShop.Context;
 using ComputerShop.Models;
 using ComputerShop.Helpers;
+using AutoMapper;
 
 namespace ComputerShop.Controllers
 {
     public class CartController : Controller
     {
         private readonly ComputerShopContext _context;
+        private readonly IMapper _mapper;
 
-        public CartController(ComputerShopContext context)
+        public CartController(ComputerShopContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Cart
@@ -26,21 +29,28 @@ namespace ComputerShop.Controllers
             return View(SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart"));
         }
 
-        public async Task<IActionResult> AddToCart(int id, int quantity)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(int id, [Bind("quantity")] int quantity)
         {
             var product = await _context.Products.FindAsync(id);
 
             if (SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart") == null)
             {
                 List<CartItem> cart = new List<CartItem>();
-                cart.Add(new CartItem()
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Image = product.Image,
-                    Price = product.Price,
-                    Quantity = quantity
-                });
+
+                CartItem newCartItem = _mapper.Map<CartItem>(product);
+                newCartItem.Quantity = quantity;
+
+                cart.Add(newCartItem);
+                //cart.Add(new CartItem()
+                //{
+                //    Id = product.Id,
+                //    Name = product.Name,
+                //    Image = product.Image,
+                //    Price = product.Price,
+                //    Quantity = quantity
+                //});
 
                 SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
             }
