@@ -42,9 +42,8 @@
             <td>
                 <div class="quantity-column">
                     <a asp-action="IncreaseQuantity" asp-route-id="@item.Id"><i class="fas fa-plus"></i></a>
-                    
                     <p>@item.Quantity</p>
-                    <a href=""><i class="fas fa-minus"></i></a>
+                    <a asp-action="DecreaseQuantity" asp-route-id="@item.Id"><i class="fas fa-minus"></i></a>
                 </div>
             </td>
         </tr>

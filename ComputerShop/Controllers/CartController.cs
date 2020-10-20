@@ -90,6 +90,32 @@ namespace ComputerShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult DecreaseQuantity(int id)
+        {
+            List<CartItem> cart = SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart");
+
+            CartItem cartItem = cart.Find(item => item.Id == id);
+
+            if (cartItem.Quantity == 1)
+            {
+                cart.Remove(cartItem);
+            }
+            else
+            {
+                cart.ForEach(item =>
+                {
+                    if (item.Id == id)
+                    {
+                        item.Quantity--;
+                    }
+                });
+            }
+
+            SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: api/Cart
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
