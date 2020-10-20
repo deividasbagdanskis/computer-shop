@@ -6,7 +6,7 @@
 
 <h1>My cart</h1>
 
-<table class="table">
+<table class="table" id="cart-table">
     <thead>
         <tr>
             <th>
@@ -27,21 +27,26 @@
     <tbody>
 @if(Model != null)
 {
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    <img src="@Url.Content($"~/images/{item.Image}")" style="width: 70px;" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-            </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img src="@Url.Content($"~/images/{item.Image}")" style="width: 70px;" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <div class="quantity-column">
+                    <i class="fas fa-plus"></i>
+                    <p>@item.Quantity</p>
+                    <i class="fas fa-minus"></i>
+                </div>
+            </td>
+        </tr>
     }
 }
     </tbody>
