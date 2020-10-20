@@ -43,14 +43,6 @@ namespace ComputerShop.Controllers
                 newCartItem.Quantity = quantity;
 
                 cart.Add(newCartItem);
-                //cart.Add(new CartItem()
-                //{
-                //    Id = product.Id,
-                //    Name = product.Name,
-                //    Image = product.Image,
-                //    Price = product.Price,
-                //    Quantity = quantity
-                //});
 
                 SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
             }
@@ -79,6 +71,23 @@ namespace ComputerShop.Controllers
                 SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
             }
             return RedirectToAction("Index", "Products");
+        }
+
+        public IActionResult IncreaseQuantity(int id)
+        {
+            List<CartItem> cart = SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart");
+            
+            cart.ForEach(item =>
+            {
+                if (item.Id == id)
+                {
+                    item.Quantity++;
+                }
+            });
+
+            SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
+
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: api/Cart
