@@ -35,6 +35,8 @@ namespace ComputerShop
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddRazorPages();
+
             services.AddMvc().AddRazorOptions(options =>
             {
                 options.ViewLocationFormats.Add("Components/NavbarDropdown/Default.cshtml");
@@ -64,6 +66,7 @@ namespace ComputerShop
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
