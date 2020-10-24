@@ -35,6 +35,11 @@ namespace ComputerShop
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddMvc().AddRazorOptions(options =>
+            {
+                options.ViewLocationFormats.Add("Components/NavbarDropdown/Default.cshtml");
+            }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+
             services.AddDbContext<ComputerShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ComputerShopContext")));
         }
