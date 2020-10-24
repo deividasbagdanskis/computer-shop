@@ -7,19 +7,21 @@ using ComputerShop.Models;
 
 namespace ComputerShop.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductController : Controller
     {
         private readonly ComputerShopContext _context;
 
-        public ProductsController(ComputerShopContext context)
+        public ProductController(ComputerShopContext context)
         {
             _context = context;
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string category)
         {
-            return View(await _context.Product.ToListAsync());
+            var products = await _context.Product.Include(p => p.Category).Where(p => p.Category.Name == category)
+                .ToListAsync();
+            return View(products);
         }
 
         // GET: Products/Details/5

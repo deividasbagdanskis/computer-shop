@@ -35,6 +35,8 @@ namespace ComputerShop.Controllers
         {
             var product = await _context.Product.FindAsync(id);
 
+            product.Category = await _context.Category.SingleAsync(c => c.Id == product.CategoryId);
+
             if (SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart") == null)
             {
                 List<CartItem> cart = new List<CartItem>();
@@ -70,7 +72,7 @@ namespace ComputerShop.Controllers
 
                 SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("Index", "Product", new { category = product.Category.Name });
         }
 
         public IActionResult IncreaseQuantity(int id)
