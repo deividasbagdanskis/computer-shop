@@ -21,6 +21,9 @@ namespace ComputerShop.Controllers
         {
             var products = await _context.Product.Include(p => p.Category).Where(p => p.Category.Name == category)
                 .ToListAsync();
+
+            ViewBag.CategoryName = category;
+
             return View(products);
         }
 
