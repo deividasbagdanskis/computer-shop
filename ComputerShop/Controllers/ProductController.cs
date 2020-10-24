@@ -7,19 +7,24 @@ using ComputerShop.Models;
 
 namespace ComputerShop.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductController : Controller
     {
         private readonly ComputerShopContext _context;
 
-        public ProductsController(ComputerShopContext context)
+        public ProductController(ComputerShopContext context)
         {
             _context = context;
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string category)
         {
-            return View(await _context.Products.ToListAsync());
+            var products = await _context.Product.Include(p => p.Category).Where(p => p.Category.Name == category)
+                .ToListAsync();
+
+            ViewBag.CategoryName = category;
+
+            return View(products);
         }
 
         // GET: Products/Details/5
@@ -30,7 +35,7 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -70,7 +75,7 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -121,7 +126,7 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -136,15 +141,15 @@ namespace ComputerShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
+            var product = await _context.Product.FindAsync(id);
+            _context.Product.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _context.Product.Any(e => e.Id == id);
         }
     }
 }

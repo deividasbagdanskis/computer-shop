@@ -13,6 +13,8 @@ namespace ComputerShop.Context
         {
         }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Product { get; set; }
+
+        public DbSet<Category> Category { get; set; }
     }
 }

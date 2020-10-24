@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ComputerShop.Models
+﻿namespace ComputerShop.Models
 {
     public class Product
     {
@@ -16,5 +11,9 @@ namespace ComputerShop.Models
         public string Image { get; set; }
 
         public double Price { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public Category Category { get; set; }
     }
 }

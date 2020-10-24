@@ -33,7 +33,9 @@ namespace ComputerShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int id, [Bind("quantity")] int quantity)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Product.FindAsync(id);
+
+            product.Category = await _context.Category.SingleAsync(c => c.Id == product.CategoryId);
 
             if (SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart") == null)
             {
@@ -70,7 +72,7 @@ namespace ComputerShop.Controllers
 
                 SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
             }
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("Index", "Product", new { category = product.Category.Name });
         }
 
         public IActionResult IncreaseQuantity(int id)
@@ -122,7 +124,7 @@ namespace ComputerShop.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.Products.Add(product);
+            _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
