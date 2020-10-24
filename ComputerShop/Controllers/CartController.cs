@@ -33,7 +33,7 @@ namespace ComputerShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int id, [Bind("quantity")] int quantity)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Product.FindAsync(id);
 
             if (SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart") == null)
             {
@@ -122,7 +122,7 @@ namespace ComputerShop.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            _context.Products.Add(product);
+            _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
