@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ComputerShop.Context;
 using ComputerShop.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ComputerShop.Controllers
 {
@@ -68,6 +69,7 @@ namespace ComputerShop.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,6 +90,7 @@ namespace ComputerShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Image,Price")] Product product)
         {
             if (id != product.Id)
