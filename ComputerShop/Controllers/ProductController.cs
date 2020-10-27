@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using ComputerShop.Context;
 using ComputerShop.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ComputerShop.Controllers
 {
@@ -36,8 +39,8 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _context.Product.FirstOrDefaultAsync(m => m.Id == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -47,8 +50,11 @@ namespace ComputerShop.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Create()
         {
+            ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
+
             return View();
         }
 
@@ -57,7 +63,8 @@ namespace ComputerShop.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Image,Price")] Product product)
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -82,6 +89,9 @@ namespace ComputerShop.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
+            
             return View(product);
         }
 
@@ -91,7 +101,7 @@ namespace ComputerShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Image,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,CategoryId")] Product product)
         {
             if (id != product.Id)
             {
@@ -116,12 +126,16 @@ namespace ComputerShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { category = "Laptops" });
             }
+            
+            ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
+
             return View(product);
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,8 +143,8 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _context.Product.Include(p => p.Category).FirstOrDefaultAsync(m => m.Id == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -142,11 +156,15 @@ namespace ComputerShop.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Product.FindAsync(id);
+            
             _context.Product.Remove(product);
+            
             await _context.SaveChangesAsync();
+            
             return RedirectToAction(nameof(Index));
         }
 
