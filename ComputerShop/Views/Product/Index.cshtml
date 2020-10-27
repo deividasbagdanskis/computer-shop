@@ -1,27 +1,42 @@
-﻿@model IEnumerable<ComputerShop.Models.Product>
+﻿@using Microsoft.AspNetCore.Identity
+@using ComputerShop.Models
+@inject SignInManager<User> signInManager
+@model IEnumerable<ComputerShop.Models.Product>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>@ViewBag.CategoryName</h1>
+
+@if (signInManager.IsSignedIn(User))
+{
+    bool isAdmin = User.IsInRole("Administrator");
+
+    if (isAdmin)
+    {
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+    }
+}
 <div class="card-deck">
     @foreach (var item in Model)
     {
-    <div class="col-sm-3" style="margin-bottom: 15px">
-        <div class="card">
-            <a asp-action="Details" asp-route-id="@item.Id">
-                <img src="@Url.Content($"~/images/{item.Image}")" class="card-img-top mx-auto" alt="..." style="width: 160px; display: block;">
-                <div class="card-body py-2">
-                    <h5 class="card-title" style="height: 48px;">@item.Name</h5>
-                    <p class="card-text">@item.Price&euro;</p>
-                </div>
-            </a>
-            <form class="card-body p-2 mx-auto" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Id" asp-route-quantity="1">
-                <input type="submit" value="Add to cart" class="btn btn-primary" />
-            </form>
+        <div class="col-sm-3" style="margin-bottom: 15px">
+            <div class="card">
+                <a asp-action="Details" asp-route-id="@item.Id">
+                    <img src="@Url.Content($"~/images/{item.Image}")" class="card-img-top mx-auto" alt="..." style="width: 160px; display: block;">
+                    <div class="card-body py-2">
+                        <h5 class="card-title" style="height: 48px;">@item.Name</h5>
+                        <p class="card-text">@item.Price&euro;</p>
+                    </div>
+                </a>
+                <form class="card-body p-2 mx-auto" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Id" asp-route-quantity="1">
+                    <input type="submit" value="Add to cart" class="btn btn-primary" />
+                </form>
+            </div>
         </div>
-    </div>
     }
 
 </div>
