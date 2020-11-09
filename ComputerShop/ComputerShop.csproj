@@ -25,4 +25,8 @@
     <None Include="wwwroot\images\lenovo.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ComputerShop.Stock.ApiClient\ComputerShop.Stock.ApiClient.csproj" />
+  </ItemGroup>
+
 </Project>

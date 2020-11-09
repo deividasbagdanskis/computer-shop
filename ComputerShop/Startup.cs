@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using ComputerShop.Context;
 using ComputerShop.Models;
+using ComputerShop.Stock.ApiClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +42,8 @@ namespace ComputerShop
             {
                 options.ViewLocationFormats.Add("Components/NavbarDropdown/Default.cshtml");
             }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+
+            services.AddSingleton<IApiClient>(new ApiClient("https://localhost:44329"));
 
             services.AddDbContext<ComputerShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ComputerShopContext")));
