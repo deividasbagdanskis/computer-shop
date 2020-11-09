@@ -22,6 +22,8 @@ namespace ComputerShop.Stock.Api
         {
             services.AddControllers();
 
+            services.AddSwaggerGen();
+
             services.AddDbContext<ComputerShopStockApiContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ComputerShopStockApiContext")));
         }
@@ -33,6 +35,9 @@ namespace ComputerShop.Stock.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(config => config.SwaggerEndpoint("/swagger/v1/swagger.json", "ComputerShop Stock API V1"));
 
             app.UseHttpsRedirection();
 
