@@ -8,16 +8,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections;
 using System.Collections.Generic;
+using ComputerShop.Stock.ApiClient;
 
 namespace ComputerShop.Controllers
 {
     public class ProductController : Controller
     {
         private readonly ComputerShopContext _context;
+        private readonly IApiClient _apiClient;
 
-        public ProductController(ComputerShopContext context)
+        public ProductController(ComputerShopContext context, IApiClient apiClient)
         {
             _context = context;
+            _apiClient = apiClient;
         }
 
         // GET: Products
@@ -45,6 +48,10 @@ namespace ComputerShop.Controllers
             {
                 return NotFound();
             }
+
+            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+
+            ViewBag.AmountInStock = stockItem.AmountInStock;
 
             return View(product);
         }
