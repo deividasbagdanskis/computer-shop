@@ -32,9 +32,12 @@
                                 @await Component.InvokeAsync("NavbarDropdown")
                             </div>
                         </li>
+                        @if (User.IsInRole("Administrator") == false)
+                        {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
                         </li>
+                        }
                     </ul>
                 </div>
             </div>

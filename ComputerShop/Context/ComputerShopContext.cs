@@ -15,7 +15,7 @@ namespace ComputerShop.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole("Admin"));
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole("Administrator"));
         }
 
         public DbSet<Product> Product { get; set; }

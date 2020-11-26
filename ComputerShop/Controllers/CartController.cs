@@ -52,7 +52,7 @@ namespace ComputerShop.Controllers
             {
                 List<CartItem> cart = SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart");
 
-                int index = exits(id, cart);
+                int index = exists(id, cart);
 
                 if (index == -1)
                 {
@@ -130,7 +130,7 @@ namespace ComputerShop.Controllers
             return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
-        private int exits(int id, List<CartItem> cart)
+        private int exists(int id, List<CartItem> cart)
         {
             for (int i = 0; i < cart.Count; i++)
             {
