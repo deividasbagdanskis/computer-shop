@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +42,7 @@ namespace ComputerShop.Controllers
 
                 CartItem newCartItem = _mapper.Map<CartItem>(product);
                 newCartItem.Quantity = quantity;
+                newCartItem.Total = Math.Round(newCartItem.Price * newCartItem.Quantity, 2, MidpointRounding.ToZero);
 
                 cart.Add(newCartItem);
 
@@ -62,12 +62,15 @@ namespace ComputerShop.Controllers
                         Name = product.Name,
                         Image = product.Image,
                         Price = product.Price,
-                        Quantity = quantity
+                        Quantity = quantity,
+                        Total = Math.Round(product.Price * quantity, 2, MidpointRounding.ToZero)
                     });
                 }
                 else
                 {
                     cart[index].Quantity++;
+                    cart[index].Total = Math.Round(cart[index].Price * cart[index].Quantity, 2, 
+                        MidpointRounding.ToZero);
                 }
 
                 SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
@@ -84,6 +87,7 @@ namespace ComputerShop.Controllers
                 if (item.Id == id)
                 {
                     item.Quantity++;
+                    item.Total = Math.Round(item.Price * item.Quantity, 2, MidpointRounding.ToZero);
                 }
             });
 
@@ -109,6 +113,7 @@ namespace ComputerShop.Controllers
                     if (item.Id == id)
                     {
                         item.Quantity--;
+                        item.Total = Math.Round(item.Price * item.Quantity, 2, MidpointRounding.ToZero);
                     }
                 });
             }
@@ -116,18 +121,6 @@ namespace ComputerShop.Controllers
             SessionHelper.WriteToSession(HttpContext.Session, "cart", cart);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        // POST: api/Cart
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
-        {
-            _context.Product.Add(product);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
         }
 
         private int exists(int id, List<CartItem> cart)
