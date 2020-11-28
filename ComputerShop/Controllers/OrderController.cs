@@ -32,19 +32,24 @@ namespace ComputerShop.Controllers
         }
 
         // GET: OrderController
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
-            return View();
+            var orders = await _context.Order.Include(o => o.CartItems)
+                .Where(o => o.Status != Status.Completed && o.Status != Status.Shipped).ToListAsync();
+
+            return View(orders);
         }
 
-        public ActionResult IndexByUserId(string userId)
+        public async Task<IActionResult> IndexByUserId(string userId)
         {
-            var orders =  _context.Order.Include(o => o.CartItems).Where(o => o.UserId == userId).ToList();
+            var orders = await  _context.Order.Include(o => o.CartItems).Where(o => o.UserId == userId).ToListAsync();
+
             return View(orders);
         }
 
         // GET: OrderController/Details/5
-        public async Task<IActionResult> Details(int id)
+        public ActionResult Details(int id)
         {
             return View();
         }
@@ -93,7 +98,7 @@ namespace ComputerShop.Controllers
         }
 
         // GET: OrderController/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public ActionResult Edit(int id)
         {
             return View();
         }
@@ -101,7 +106,7 @@ namespace ComputerShop.Controllers
         // POST: OrderController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
@@ -114,7 +119,7 @@ namespace ComputerShop.Controllers
         }
 
         // GET: OrderController/Delete/5
-        public async Task<IActionResult> Delete(int id)
+        public ActionResult Delete(int id)
         {
             return View();
         }
@@ -122,7 +127,7 @@ namespace ComputerShop.Controllers
         // POST: OrderController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
