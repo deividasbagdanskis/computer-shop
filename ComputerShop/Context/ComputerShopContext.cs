@@ -15,11 +15,15 @@ namespace ComputerShop.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole("Admin"));
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole("Administrator"));
         }
 
         public DbSet<Product> Product { get; set; }
 
         public DbSet<Category> Category { get; set; }
+
+        public DbSet<CartItem> CartItem { get; set; }
+
+        public DbSet<Order> Order { get; set; }
     }
 }

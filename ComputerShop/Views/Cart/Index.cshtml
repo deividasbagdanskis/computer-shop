@@ -21,7 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -37,7 +39,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.Price) &euro;
             </td>
             <td>
                 <div class="quantity-column">
@@ -46,8 +48,21 @@
                     <a asp-action="DecreaseQuantity" asp-route-id="@item.Id"><i class="fas fa-minus"></i></a>
                 </div>
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total) &euro;
+            </td>
         </tr>
     }
 }
     </tbody>
 </table>
+@if (Model != null)
+{
+<div class="row border-top justify-content-end">
+    <div class="col-1 mt-3">
+        <form asp-controller="Order" asp-action="Create">
+            <input type="submit" value="Order" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+}

@@ -4,18 +4,20 @@ using ComputerShop.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComputerShop.Migrations
 {
     [DbContext(typeof(ComputerShopContext))]
-    partial class ComputerShopContextModelSnapshot : ModelSnapshot
+    [Migration("20201126185549_CartItemAndOrderTablesAdded")]
+    partial class CartItemAndOrderTablesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -85,12 +87,15 @@ namespace ComputerShop.Migrations
                     b.Property<double>("Total")
                         .HasColumnType("float");
 
-                    b.Property<string>("UserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Order");
                 });
@@ -218,8 +223,8 @@ namespace ComputerShop.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8944f3d7-5a6a-4af5-a59f-5129279b50e2",
-                            ConcurrencyStamp = "137b70ed-0005-4b19-a80c-243423021872",
+                            Id = "80995586-975c-48c3-896f-ce887415e591",
+                            ConcurrencyStamp = "766bb6bd-c804-4032-a890-66df27121d65",
                             Name = "Administrator"
                         });
                 });
@@ -341,7 +346,7 @@ namespace ComputerShop.Migrations
                 {
                     b.HasOne("ComputerShop.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("ComputerShop.Models.Product", b =>

@@ -1,18 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ComputerShop.Models
+﻿namespace ComputerShop.Models
 {
-    [NotMapped]
     public class CartItem
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
         public string Image { get; set; }
-
         public double Price { get; set; }
-
         public int Quantity { get; set; }
+        public double Total { get; set; }
+        public int OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }
