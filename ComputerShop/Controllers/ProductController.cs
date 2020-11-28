@@ -71,12 +71,22 @@ namespace ComputerShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Product product,
+            int amountInStock)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+
+                StockItem stockItem = new StockItem()
+                {
+                    ProductId = product.Id,
+                    AmountInStock = amountInStock
+                };
+
+                await _apiClient.ApiStockPostAsync(stockItem);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
