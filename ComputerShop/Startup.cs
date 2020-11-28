@@ -3,6 +3,7 @@ using AutoMapper;
 using ComputerShop.Context;
 using ComputerShop.Models;
 using ComputerShop.Stock.ApiClient;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +34,12 @@ namespace ComputerShop
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Identity/Account/Login";
+                });
 
             services.AddRazorPages();
 

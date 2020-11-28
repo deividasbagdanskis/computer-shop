@@ -1,9 +1,11 @@
-﻿namespace ComputerShop.Enums
+﻿using System.ComponentModel;
+
+namespace ComputerShop.Enums
 {
     public enum Status
     {
-        AwaitingFulfillment,
-        AwaitingShipment,
+        [Description("Awaiting Fulfillment")] AwaitingFulfillment,
+        [Description("Awaiting Shipment")] AwaitingShipment,
         Shipped,
         Completed
     }

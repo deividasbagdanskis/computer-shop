@@ -1,9 +1,16 @@
 ﻿using ComputerShop.Context;
+using ComputerShop.Enums;
+using ComputerShop.Helpers;
+using ComputerShop.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ComputerShop.Controllers
@@ -11,10 +18,17 @@ namespace ComputerShop.Controllers
     public class OrderController : Controller
     {
         private readonly ComputerShopContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderController(ComputerShopContext context)
+        public OrderController(ComputerShopContext context, UserManager<User> userManager,
+            SignInManager<User> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: OrderController
@@ -23,30 +37,58 @@ namespace ComputerShop.Controllers
             return View();
         }
 
+        public ActionResult IndexByUserId(string userId)
+        {
+            var orders =  _context.Order.Include(o => o.CartItems).Where(o => o.UserId == userId).ToList();
+            return View(orders);
+        }
+
         // GET: OrderController/Details/5
         public async Task<IActionResult> Details(int id)
         {
             return View();
         }
 
-        // GET: OrderController/Create
-        //public async Task<IActionResult> Create()
-        //{
-        //    return View();
-        //}
-
         // POST: OrderController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create()
         {
+            if (_signInManager.IsSignedIn(User) == false)
+            {
+                return Redirect("/Identity/Account/Login");
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                string userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Order order = new Order()
+                {
+                    UserId = userId,
+                    CartItems = SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart"),
+                    CreationDate = DateTime.Now,
+                    Status = Status.AwaitingFulfillment
+                };
+
+                double orderTotal = 0;
+
+                foreach (CartItem cartItem in order.CartItems)
+                {
+                    orderTotal += cartItem.Total;
+                    cartItem.Id = 0;
+                }
+
+                order.Total = orderTotal;
+                
+                _context.Order.Add(order);
+
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("IndexByUserId", new { userId = userId });
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index", "Cart");
             }
         }
 
