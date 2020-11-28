@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections;
 using System.Collections.Generic;
 using ComputerShop.Stock.ApiClient;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using System;
 
 namespace ComputerShop.Controllers
 {
@@ -16,11 +20,14 @@ namespace ComputerShop.Controllers
     {
         private readonly ComputerShopContext _context;
         private readonly IApiClient _apiClient;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ComputerShopContext context, IApiClient apiClient)
+        public ProductController(ComputerShopContext context, IApiClient apiClient,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _apiClient = apiClient;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Products
@@ -71,12 +78,33 @@ namespace ComputerShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Product product,
+            int amountInStock, [FromForm(Name = "imageFile")] IFormFile imageFile)
         {
             if (ModelState.IsValid)
             {
+                string uniqueFileName = null;
+
+                if (imageFile != null)
+                {
+                    string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                    imageFile.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                    product.Image = uniqueFileName;
+                }
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+
+                StockItem stockItem = new StockItem()
+                {
+                    ProductId = product.Id,
+                    AmountInStock = amountInStock
+                };
+
+                await _apiClient.ApiStockPostAsync(stockItem);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -96,9 +124,11 @@ namespace ComputerShop.Controllers
             {
                 return NotFound();
             }
+            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
 
             ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
-            
+            ViewData["AmountInStock"] = stockItem.AmountInStock;
+
             return View(product);
         }
 
@@ -108,18 +138,25 @@ namespace ComputerShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,CategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,CategoryId")] Product product,
+            int amountInStock)
         {
             if (id != product.Id)
             {
                 return NotFound();
             }
 
+            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    stockItem.AmountInStock = amountInStock;
+                    await _apiClient.ApiStockPutAsync(stockItem.Id, stockItem);
+
                     _context.Update(product);
+                    _context.Entry(product).Property("Image").IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -135,8 +172,10 @@ namespace ComputerShop.Controllers
                 }
                 return RedirectToAction(nameof(Index), new { category = "Laptops" });
             }
-            
+
+
             ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
+            ViewData["AmountInStock"] = stockItem.AmountInStock;
 
             return View(product);
         }
@@ -157,6 +196,9 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
+            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+            ViewData["AmountInStock"] = stockItem.AmountInStock;
+
             return View(product);
         }
 
@@ -168,6 +210,20 @@ namespace ComputerShop.Controllers
         {
             var product = await _context.Product.FindAsync(id);
             
+            if (product.Image != null)
+            {
+                string imageFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                string imagePath = Path.Combine(imageFolder, product.Image);
+
+                FileInfo fileInfo = new FileInfo(imagePath);
+
+                System.IO.File.Delete(imagePath);
+
+                fileInfo.Delete();
+            }
+
+            await _apiClient.ApiStockDeleteAsync(product.Id);
+
             _context.Product.Remove(product);
             
             await _context.SaveChangesAsync();
