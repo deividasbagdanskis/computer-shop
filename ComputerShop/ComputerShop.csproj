@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20201126184914_CartItemAndOrderTablesAdded.cs" />
     <Compile Remove="Migrations\20201126184914_CartItemAndOrderTablesAdded.Designer.cs" />
+    <Compile Remove="Migrations\20210204140634_InsertInitialData.cs" />
+    <Compile Remove="Migrations\20210204140634_InsertInitialData.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
