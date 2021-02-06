@@ -348,3 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+ComputerShop/Properties/ServiceDependencies
+ComputerShop/Properties/serviceDependencies.ComputerShop20210204213340 - Web Deploy.json
+ComputerShop/Properties/serviceDependencies.json
