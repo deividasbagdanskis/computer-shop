@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/ComputerShopStock-Api/apis/ComputerShopStockApi",
+      "type": "apis.azure"
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/computershopdb-server/databases/ComputerShop.Stock.Api_db",
+      "type": "mssql.azure",
+      "connectionId": "ComputerShopStockApiContext",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}
