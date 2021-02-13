@@ -3,14 +3,16 @@ using ComputerShop.Stock.Api.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComputerShop.Stock.Api.Migrations
 {
     [DbContext(typeof(ComputerShopStockApiContext))]
-    partial class ComputerShopStockApiContextModelSnapshot : ModelSnapshot
+    [Migration("20210207155654_InsertInitialData")]
+    partial class InsertInitialData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

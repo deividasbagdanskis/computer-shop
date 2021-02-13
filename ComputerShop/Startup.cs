@@ -50,7 +50,9 @@ namespace ComputerShop
                 options.ViewLocationFormats.Add("Components/NavbarDropdown/Default.cshtml");
             }).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
 
-            services.AddSingleton<IApiClient>(new ApiClient("https://localhost:44329"));
+            string stockApiUrl = Configuration["StockApiUrl"];
+
+            services.AddSingleton<IApiClient>(new ApiClient(stockApiUrl));
 
             services.AddDbContext<ComputerShopContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ComputerShopContext")));
