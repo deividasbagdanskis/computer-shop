@@ -1,17 +1,10 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-#home {
-  min-width: 80vw;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+#myCarousel img {
   height: 77vh;
-  padding-left: 0;
-  padding-right: 0;
-  background-image: url("../images/alexandre-debieve-FO7JIlwjOtU-unsplash.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  object-position: center;
+  object-fit: cover;
 }
 
 #home-div {
@@ -23,10 +16,32 @@ for details on configuring this project to bundle and minify static web assets. 
   margin: auto 0;
 }
 
+.carousel-control-prev,
+.carousel-control-next {
+  width: 10%;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+}
+
+.card-title {
+  min-height: 48px;
+}
+
+.navbar {
+  background-color: #064cdb;
+}
+
+.navbar-toggler {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 /* Provide sufficient contrast against white background */
@@ -36,11 +51,12 @@ a {
 
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #064cdb;
+  border-color: #064cdb;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
@@ -65,7 +81,7 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
 button.accept-policy {
@@ -82,14 +98,28 @@ html {
 
 body {
   /* Margin bottom by footer height */
+  background-color: #f8f8f8;
   margin-bottom: 60px;
 }
 .footer {
+  background-color: #151515;
   position: absolute;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+#footer {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+a {
+  color: #064cdb;
+}
+
+.text-light {
+  color: #ffffff !important;
 }
 
 .dropdown:hover > .dropdown-menu {
