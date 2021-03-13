@@ -85,14 +85,27 @@ namespace ComputerShop.Controllers
             {
                 string uniqueFileName = null;
 
+                string extension = Path.GetExtension(imageFile.FileName);
+
+                bool isImage = extension == ".jpg" || extension == ".jpeg" || extension == ".png";
+
                 if (imageFile != null)
                 {
-                    string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
-                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                    imageFile.CopyTo(new FileStream(filePath, FileMode.Create));
+                    if (isImage)
+                    {
+                        string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                        uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                        string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                        imageFile.CopyTo(new FileStream(filePath, FileMode.Create));
 
-                    product.Image = uniqueFileName;
+                        product.Image = uniqueFileName;
+                    }
+                    else
+                    {
+                        ViewData["ErrorMessage"] = "Image file must have .jpg, .jpeg or .png file extension";
+
+                        return View(product);
+                    }
                 }
                 _context.Add(product);
                 await _context.SaveChangesAsync();

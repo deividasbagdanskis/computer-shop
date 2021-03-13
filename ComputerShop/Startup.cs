@@ -43,6 +43,13 @@ namespace ComputerShop
 
             services.AddRazorPages();
 
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+            });
+
             services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, IdentityRole>>();
 
             services.AddMvc().AddRazorOptions(options =>
