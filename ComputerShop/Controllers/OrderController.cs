@@ -80,7 +80,7 @@ namespace ComputerShop.Controllers
                 foreach (CartItem cartItem in order.CartItems)
                 {
                     orderTotal += cartItem.Total;
-                    cartItem.Id = 0;
+                    cartItem.Id = "";
                 }
 
                 order.Total = orderTotal;

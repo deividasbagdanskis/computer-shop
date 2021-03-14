@@ -8,6 +8,6 @@ namespace ComputerShop.Models
 
         public string Name { get; set; }
 
-        public List<Product> Products { get; set; }
+        public List<Computer> Computers { get; set; }
     }
 }

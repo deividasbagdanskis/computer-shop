@@ -7,7 +7,7 @@ namespace ComputerShop.MappingProfiles
     {
         public CartItemProfile()
         {
-            CreateMap<Product, CartItem>().ReverseMap();
+            CreateMap<Computer, CartItem>().ReverseMap();
         }
     }
 }
