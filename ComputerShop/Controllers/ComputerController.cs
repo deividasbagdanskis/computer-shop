@@ -6,8 +6,6 @@ using ComputerShop.Context;
 using ComputerShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections;
-using System.Collections.Generic;
 using ComputerShop.Stock.ApiClient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
@@ -16,13 +14,14 @@ using System;
 
 namespace ComputerShop.Controllers
 {
-    public class ProductController : Controller
+    [Route("/computers/{action}")]
+    public class ComputerController : Controller
     {
         private readonly ComputerShopContext _context;
         private readonly IApiClient _apiClient;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ComputerShopContext context, IApiClient apiClient,
+        public ComputerController(ComputerShopContext context, IApiClient apiClient,
             IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
