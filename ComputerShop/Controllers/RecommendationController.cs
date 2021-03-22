@@ -2,6 +2,7 @@
 using ComputerShop.Models;
 using ComputerShop.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,12 @@ namespace ComputerShop.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             RecommendationViewModel recommendationViewModel = new RecommendationViewModel();
             recommendationViewModel.RecommendedComputer = null;
+
+            ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
 
             return View(recommendationViewModel);
         }
@@ -48,7 +51,9 @@ namespace ComputerShop.Controllers
                 double storagePriority = recommendationViewModel.StorageNotImportant ? 0 : recommendationViewModel.StoragePriority;
                 double pricePriority = recommendationViewModel.PriceNotImportant ? 0 : recommendationViewModel.PricePriority;
 
-                IList<Computer> computers = await _context.Computer.ToListAsync();
+                IList<Computer> computers = await _context.Computer
+                                                          .Where(c => c.CategoryId == requestedComputer.CategoryId)
+                                                          .ToListAsync();
 
                 IDictionary<double, Computer> offers = new Dictionary<double, Computer>();
 
@@ -66,9 +71,12 @@ namespace ComputerShop.Controllers
                 IOrderedEnumerable<KeyValuePair<double, Computer>> sortedOffers = offers.OrderBy(key => key.Key);
 
                 Computer bestOffer = sortedOffers.FirstOrDefault().Value;
+                bestOffer.Category = _context.Category.Where(c => c.Id == bestOffer.CategoryId).FirstOrDefault();
 
                 recommendationViewModel.RecommendedComputer = bestOffer;
             }
+
+            ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
 
             return View(recommendationViewModel);
         }
