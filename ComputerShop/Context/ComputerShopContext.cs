@@ -189,6 +189,8 @@ namespace ComputerShop.Context
                     CategoryId = 2
                 },
             });
+
+            modelBuilder.Entity<RecommendationStats>().HasData(new RecommendationStats() { Id = 1 });
         }
 
         public DbSet<Computer> Computer { get; set; }
@@ -198,5 +200,7 @@ namespace ComputerShop.Context
         public DbSet<CartItem> CartItem { get; set; }
 
         public DbSet<Order> Order { get; set; }
+
+        public DbSet<RecommendationStats> RecommendationStats { get; set; }
     }
 }

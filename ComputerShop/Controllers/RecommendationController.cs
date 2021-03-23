@@ -55,6 +55,13 @@ namespace ComputerShop.Controllers
                                                           .Where(c => c.CategoryId == requestedComputer.CategoryId)
                                                           .ToListAsync();
 
+                RecommendationStats recommendationStats = _context.RecommendationStats.FirstOrDefault();
+                recommendationStats.RecommendedCount += 1;
+
+                _context.RecommendationStats.Update(recommendationStats);
+                _context.Entry(recommendationStats).Property("BoughtCount").IsModified = false;
+                await _context.SaveChangesAsync();
+
                 IDictionary<double, Computer> offers = new Dictionary<double, Computer>();
 
                 foreach (Computer computer in computers)

@@ -41,7 +41,7 @@ namespace ComputerShop.Controllers
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string id, bool recommended = false)
         {
             if (id == null)
             {
@@ -58,6 +58,16 @@ namespace ComputerShop.Controllers
             //StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
 
             //ViewBag.AmountInStock = stockItem.AmountInStock;
+
+            if (recommended)
+            {
+                RecommendationStats recommendationStats = _context.RecommendationStats.FirstOrDefault();
+                recommendationStats.BoughtCount += 1;
+
+                _context.RecommendationStats.Update(recommendationStats);
+                _context.Entry(recommendationStats).Property("RecommendedCount").IsModified = false;
+                await _context.SaveChangesAsync();
+            }
 
             return View(product);
         }
