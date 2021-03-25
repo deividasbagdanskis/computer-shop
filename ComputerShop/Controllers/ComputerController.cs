@@ -6,8 +6,6 @@ using ComputerShop.Context;
 using ComputerShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections;
-using System.Collections.Generic;
 using ComputerShop.Stock.ApiClient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
@@ -16,13 +14,14 @@ using System;
 
 namespace ComputerShop.Controllers
 {
-    public class ProductController : Controller
+    [Route("/computers/{action}")]
+    public class ComputerController : Controller
     {
         private readonly ComputerShopContext _context;
         private readonly IApiClient _apiClient;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ComputerShopContext context, IApiClient apiClient,
+        public ComputerController(ComputerShopContext context, IApiClient apiClient,
             IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
@@ -33,7 +32,7 @@ namespace ComputerShop.Controllers
         // GET: Products
         public async Task<IActionResult> Index(string category)
         {
-            var products = await _context.Product.Include(p => p.Category).Where(p => p.Category.Name == category)
+            var products = await _context.Computer.Include(p => p.Category).Where(p => p.Category.Name == category)
                 .ToListAsync();
 
             ViewBag.CategoryName = category;
@@ -42,23 +41,33 @@ namespace ComputerShop.Controllers
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id, bool recommended = false)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product.FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _context.Computer.FirstOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
             {
                 return NotFound();
             }
 
-            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+            //StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
 
-            ViewBag.AmountInStock = stockItem.AmountInStock;
+            //ViewBag.AmountInStock = stockItem.AmountInStock;
+
+            if (recommended)
+            {
+                RecommendationStats recommendationStats = _context.RecommendationStats.FirstOrDefault();
+                recommendationStats.BoughtCount += 1;
+
+                _context.RecommendationStats.Update(recommendationStats);
+                _context.Entry(recommendationStats).Property("RecommendedCount").IsModified = false;
+                await _context.SaveChangesAsync();
+            }
 
             return View(product);
         }
@@ -78,7 +87,7 @@ namespace ComputerShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Product product,
+        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId")] Computer product,
             int amountInStock, [FromForm(Name = "imageFile")] IFormFile imageFile)
         {
             if (ModelState.IsValid)
@@ -110,13 +119,13 @@ namespace ComputerShop.Controllers
                 _context.Add(product);
                 await _context.SaveChangesAsync();
 
-                StockItem stockItem = new StockItem()
-                {
-                    ProductId = product.Id,
-                    AmountInStock = amountInStock
-                };
+                //StockItem stockItem = new StockItem()
+                //{
+                //    ProductId = product.Id,
+                //    AmountInStock = amountInStock
+                //};
 
-                await _apiClient.ApiStockPostAsync(stockItem);
+                //await _apiClient.ApiStockPostAsync(stockItem);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -132,15 +141,15 @@ namespace ComputerShop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Computer.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+            //StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
 
             ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
-            ViewData["AmountInStock"] = stockItem.AmountInStock;
+            //ViewData["AmountInStock"] = stockItem.AmountInStock;
 
             return View(product);
         }
@@ -151,22 +160,22 @@ namespace ComputerShop.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,CategoryId")] Product product,
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,CategoryId")] Computer product,
             int amountInStock)
         {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
+            //if (id != product.Id)
+            //{
+            //    return NotFound();
+            //}
 
-            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+            //StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    stockItem.AmountInStock = amountInStock;
-                    await _apiClient.ApiStockPutAsync(stockItem.Id, stockItem);
+                    //stockItem.AmountInStock = amountInStock;
+                    //await _apiClient.ApiStockPutAsync(stockItem.Id, stockItem);
 
                     _context.Update(product);
                     _context.Entry(product).Property("Image").IsModified = false;
@@ -188,29 +197,29 @@ namespace ComputerShop.Controllers
 
 
             ViewData["CategoryId"] = new SelectList(await _context.Category.ToListAsync(), "Id", "Name");
-            ViewData["AmountInStock"] = stockItem.AmountInStock;
+            //ViewData["AmountInStock"] = stockItem.AmountInStock;
 
             return View(product);
         }
 
         // GET: Products/Delete/5
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Product.Include(p => p.Category).FirstOrDefaultAsync(m => m.Id == id);
+            var product = await _context.Computer.Include(p => p.Category).FirstOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
             {
                 return NotFound();
             }
 
-            StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
-            ViewData["AmountInStock"] = stockItem.AmountInStock;
+            //StockItem stockItem = await _apiClient.ApiStockGetAsync(product.Id);
+            //ViewData["AmountInStock"] = stockItem.AmountInStock;
 
             return View(product);
         }
@@ -221,7 +230,7 @@ namespace ComputerShop.Controllers
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Computer.FindAsync(id);
             
             if (product.Image != null)
             {
@@ -235,18 +244,18 @@ namespace ComputerShop.Controllers
                 fileInfo.Delete();
             }
 
-            await _apiClient.ApiStockDeleteAsync(product.Id);
+            //await _apiClient.ApiStockDeleteAsync(product.Id);
 
-            _context.Product.Remove(product);
+            //_context.Product.Remove(product);
             
             await _context.SaveChangesAsync();
             
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool ProductExists(string id)
         {
-            return _context.Product.Any(e => e.Id == id);
+            return _context.Computer.Any(e => e.Id == id);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace ComputerShop.Migrations
                 name: "CartItem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<string>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     Image = table.Column<string>(nullable: true),

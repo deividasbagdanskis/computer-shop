@@ -4,14 +4,16 @@ using ComputerShop.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ComputerShop.Migrations
 {
     [DbContext(typeof(ComputerShopContext))]
-    partial class ComputerShopContextModelSnapshot : ModelSnapshot
+    [Migration("20210314172619_ReplaceProductTableWithComputerTable")]
+    partial class ReplaceProductTableWithComputerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +131,7 @@ namespace ComputerShop.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "27397c44-f4a2-4cb1-9ffe-7745dad21e74",
+                            Id = "0e437e87-e6ce-4eaf-ae27-d2b3eae3515c",
                             CPU = "AMD Ryzen™ 5 4600H",
                             CategoryId = 1,
                             ClockSpeed = 3.0,
@@ -146,7 +148,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "2b2bc38e-06a2-4c83-adda-2e7840b91c25",
+                            Id = "3ddd1552-d313-4544-ad82-2c8e44a44fa4",
                             CPU = "AMD Ryzen 3 4300U",
                             CategoryId = 1,
                             ClockSpeed = 2.7000000000000002,
@@ -163,7 +165,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "1b99aa40-8ab6-439a-bb08-897cc6faf9a2",
+                            Id = "3683cffb-3f2b-48b4-86e5-2727a7ad2d8f",
                             CPU = "AMD Ryzen™ 3 4300U",
                             CategoryId = 1,
                             ClockSpeed = 2.7000000000000002,
@@ -180,7 +182,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "cd714add-9df0-4262-be41-5a1579aa0fc7",
+                            Id = "1c14d6b7-c165-4527-a601-d3669e1c0966",
                             CPU = "Intel® Core™ i5-10300H",
                             CategoryId = 1,
                             ClockSpeed = 2.5,
@@ -197,7 +199,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "d6e4a51c-8620-43bd-be22-eb83d7642346",
+                            Id = "93065899-890f-4cef-ba3a-fa32d1934155",
                             CPU = "Intel Celeron N4000",
                             CategoryId = 1,
                             ClockSpeed = 1.1000000000000001,
@@ -214,7 +216,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "0894c0f2-0c9b-47b3-9ecd-c2d6ff9c540a",
+                            Id = "fb6d71b0-50fe-42fd-90b3-387fc63ef422",
                             CPU = "AMD Ryzen™ 5 4500U",
                             CategoryId = 1,
                             ClockSpeed = 2.2999999999999998,
@@ -231,7 +233,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "bc0f5633-570a-4191-9f93-07b7fd433adf",
+                            Id = "f78a9382-a8f2-454d-ae8a-ef364da9186d",
                             CPU = "Intel® Core™ i7-9700K",
                             CategoryId = 2,
                             ClockSpeed = 3.6000000000000001,
@@ -246,7 +248,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "64dbc640-bfdf-4cb8-9713-6bbe8bd7649b",
+                            Id = "c85a55a3-432e-402f-b956-1ff094332e97",
                             CPU = "Intel® Core™ i9-9900K",
                             CategoryId = 2,
                             ClockSpeed = 3.6000000000000001,
@@ -261,7 +263,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "f693e524-da20-484d-a5a4-ccf60f1fd510",
+                            Id = "0723df6d-e484-48b3-bd1e-efde35d8c52a",
                             CPU = "AMD Ryzen™ 5 2600",
                             CategoryId = 2,
                             ClockSpeed = 3.3999999999999999,
@@ -276,7 +278,7 @@ namespace ComputerShop.Migrations
                         },
                         new
                         {
-                            Id = "517e9154-1f69-455f-83ea-405e89ddde0a",
+                            Id = "0fd0e843-9dd8-41e3-a104-729c4feb2dac",
                             CPU = "AMD Ryzen™ 5 2600",
                             CategoryId = 2,
                             ClockSpeed = 3.3999999999999999,
@@ -318,32 +320,6 @@ namespace ComputerShop.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("ComputerShop.Models.RecommendationStats", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BoughtCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecommendedCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RecommendationStats");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BoughtCount = 0,
-                            RecommendedCount = 0
-                        });
                 });
 
             modelBuilder.Entity("ComputerShop.Models.User", b =>
@@ -440,8 +416,8 @@ namespace ComputerShop.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1d84d74c-5bb9-4e8b-9101-8aeadb3d8b06",
-                            ConcurrencyStamp = "31b09f90-b130-4b61-9630-11e1b5bdf0fd",
+                            Id = "c971865f-a42c-44dd-8133-e321bff58a6f",
+                            ConcurrencyStamp = "6036451f-7a29-450b-bf7e-ef5870a4fc49",
                             Name = "Administrator"
                         });
                 });

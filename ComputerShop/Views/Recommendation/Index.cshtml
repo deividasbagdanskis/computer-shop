@@ -1,0 +1,217 @@
+﻿@model ComputerShop.ViewModels.RecommendationViewModel
+
+@{
+  ViewData["Title"] = "Index";
+}
+
+<h2>Recommender</h2>
+<hr class="my-2" />
+<div class="row">
+  <div class="col-md-6">
+    <h4 class="mb-3">Enter wanted computer specifications</h4>
+    <form asp-action="Index">
+      <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      @*<div class="row">
+          <div class="col-4 form-group">
+            <label asp-for="RequestedComputer.ScreenSize" class="control-label">Screen size (inches)</label>
+            <input asp-for="RequestedComputer.ScreenSize" class="form-control" />
+            <span asp-validation-for="RequestedComputer.Cores" class="text-danger"></span>
+          </div>
+          <div class="col-3 form-group my-auto">
+          <input asp-for="ScreenSizeNotImportant" type="checkbox" class="form-check-input" id="screenSizeCheckbox" />
+          <label for="screenSizeCheckbox" class="form-check-label">Not important</label>
+        </div>
+          <div class="col-4 pr-0 form-group">
+            <label asp-for="ScreenSizePriority">Priority</label>
+            <input asp-for="ScreenSizePriority" min="10" max="60" step="10" value="20" type="range" class="form-control-range" id="screenSizePriority">
+          </div>
+          <div class="col-1 my-auto">
+            <p id="screenSizePriorityValueLabel">
+              20%
+            </p>
+          </div>
+        </div>*@
+      <div class="row">
+        <div class="col-4 form-group">
+          <label asp-for="RequestedComputer.CategoryId" class="control-label">Type</label>
+          <select asp-for="RequestedComputer.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+          <span asp-validation-for="RequestedComputer.Category" class="text-danger"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 form-group">
+          <label asp-for="RequestedComputer.Cores" class="control-label">Amount of cores</label>
+          <input asp-for="RequestedComputer.Cores" class="form-control" id="coresInput" />
+          <span asp-validation-for="RequestedComputer.Cores" class="text-danger"></span>
+        </div>
+        <div class="col-3 form-group my-auto">
+          <input asp-for="CoresNotImportant" type="checkbox" class="form-check-input" id="coresCheckbox" />
+          <label for="coresCheckbox" class="form-check-label">Not important</label>
+        </div>
+        <div class="col-4 pl-0 pr-0 form-group">
+          <label asp-for="CorePriority">Priority</label>
+          <input asp-for="CorePriority" min="10" max="60" step="10" value="20" type="range" class="form-control-range" id="corePriority">
+        </div>
+        <div class="col-1 my-auto">
+          <p id="corePriorityValueLabel">
+            20%
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 form-group">
+          <label asp-for="RequestedComputer.ClockSpeed" class="control-label">Clock speed (GHz)</label>
+          <input asp-for="RequestedComputer.ClockSpeed" class="form-control" id="clockSpeedInput" />
+          <span asp-validation-for="RequestedComputer.ClockSpeed" class="text-danger"></span>
+        </div>
+        <div class="col-3 form-group my-auto">
+          <input asp-for="ClockSpeedNotImportant" type="checkbox" class="form-check-input" id="clockSpeedCheckbox" />
+          <label for="clockSpeedCheckbox" class="form-check-label">Not important</label>
+        </div>
+        <div class="col-4 pl-0 pr-0 form-group">
+          <label asp-for="ClockSpeedPriority">Priority</label>
+          <input asp-for="ClockSpeedPriority" min="10" max="60" step="10" value="20" type="range" class="form-control-range" id="clockSpeedPriority">
+        </div>
+        <div class="col-1 my-auto">
+          <p id="clockSpeedPriorityValueLabel">
+            20%
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 form-group">
+          <label asp-for="RequestedComputer.RAM" class="control-label">RAM (GB)</label>
+          <input asp-for="RequestedComputer.RAM" class="form-control" id="ramInput" />
+          <span asp-validation-for="RequestedComputer.RAM" class="text-danger"></span>
+        </div>
+        <div class="col-3 form-group my-auto">
+          <input asp-for="RAMNotImportant" type="checkbox" class="form-check-input" id="ramCheckbox" />
+          <label for="ramCheckbox" class="form-check-label">Not important</label>
+        </div>
+        <div class="col-4 pl-0 pr-0 form-group">
+          <label asp-for="RAMPriority">Priority</label>
+          <input asp-for="RAMPriority" min="10" max="60" step="10" value="20" type="range" class="form-control-range" id="ramPriority">
+        </div>
+        <div class="col-1 my-auto">
+          <p id="ramPriorityValueLabel">
+            20%
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 form-group">
+          <label asp-for="RequestedComputer.Storage" class="control-label">Storage (GB)</label>
+          <input asp-for="RequestedComputer.Storage" class="form-control" id="storageInput" />
+          <span asp-validation-for="RequestedComputer.Storage" class="text-danger"></span>
+        </div>
+        <div class="col-3 form-group my-auto">
+          <input asp-for="StorageNotImportant" type="checkbox" class="form-check-input" id="storageCheckbox" />
+          <label for="storageCheckbox" class="form-check-label">Not important</label>
+        </div>
+        <div class="col-4 pl-0 pr-0 form-group">
+          <label asp-for="StoragePriority">Priority</label>
+          <input asp-for="StoragePriority" min="10" max="60" step="10" value="20" type="range" class="form-control-range" id="storagePriority">
+        </div>
+        <div class="col-1 my-auto">
+          <p id="storagePriorityValueLabel">
+            20%
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4 form-group">
+          <label asp-for="RequestedComputer.Price" class="control-label">Price (€)</label>
+          <input asp-for="RequestedComputer.Price" class="form-control" id="priceInput" />
+          <span asp-validation-for="RequestedComputer.Price" class="text-danger"></span>
+        </div>
+        <div class="col-3 form-group my-auto">
+          <input asp-for="PriceNotImportant" type="checkbox" class="form-check-input" id="priceCheckbox" />
+          <label for="priceCheckbox" class="form-check-label">Not important</label>
+        </div>
+        <div class="col-4 pl-0 pr-0 form-group">
+          <label asp-for="PricePriority">Priority</label>
+          <input asp-for="PricePriority" min="10" max="60" step="10" value="20" type="range" class="form-control-range" id="pricePriority">
+        </div>
+        <div class="col-1 my-auto">
+          <p id="pricePriorityValueLabel">
+            20%
+          </p>
+        </div>
+      </div>
+      <div class="row justify-content-between">
+        <div class="col-4 form-group">
+          <input id="submitButton" type="submit" value="Submit" class="btn btn-primary btn-block" />
+        </div>
+        <div class="col-1 my-auto">
+          <p id="prioritySum" style="color: green">
+            100%
+          </p>
+        </div>
+      </div>
+    </form>
+  </div>
+  @if (Model.RecommendedComputer != null)
+  {
+    <div class="col-md-6">
+      <h4 class="mb-3">Recommended computer</h4>
+      <div class="row">
+        <div class="col-12">
+          <p class="mb-0">Recommended computer: <strong>@Model.RecommendedComputer.Name</strong></p>
+          <p class="mb-2">Type: @Model.RecommendedComputer.Category.Name</p>
+        </div>
+      </div>
+      <img src="@Url.Content($"~/images/{Model.RecommendedComputer.Image}")" style="width: 250px" class="img-fluid mx-auto d-block mb-3" />
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-sm text-center mx-2">
+            <thead>
+              <tr>
+                <th scope="col">Property</th>
+                <th scope="col">Wanted</th>
+                <th scope="col">Recommended</th>
+                <th scope="col">Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="text-left">Cores</th>
+                <td>@Html.DisplayFor(model => model.RequestedComputer.Cores)</td>
+                <td>@Html.DisplayFor(model => model.RecommendedComputer.Cores)</td>
+                <td>@(Model.RecommendedComputer.Cores - Model.RequestedComputer.Cores)</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-left">Clock speed (GHz)</th>
+                <td>@Html.DisplayFor(model => model.RequestedComputer.ClockSpeed)</td>
+                <td>@Html.DisplayFor(model => model.RecommendedComputer.ClockSpeed)</td>
+                <td>@Math.Round(Model.RecommendedComputer.ClockSpeed - Model.RequestedComputer.ClockSpeed, 2)</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-left">RAM (GB)</th>
+                <td>@Html.DisplayFor(model => model.RequestedComputer.RAM)</td>
+                <td>@Html.DisplayFor(model => model.RecommendedComputer.RAM)</td>
+                <td>@(Model.RecommendedComputer.RAM - Model.RequestedComputer.RAM)</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-left">Storage (GB)</th>
+                <td>@Html.DisplayFor(model => model.RequestedComputer.Storage)</td>
+                <td>@Html.DisplayFor(model => model.RecommendedComputer.Storage)</td>
+                <td>@(Model.RecommendedComputer.Storage - Model.RequestedComputer.Storage)</td>
+              </tr>
+              <tr>
+                <th scope="row" class="text-left">Price (€)</th>
+                <td>@Html.DisplayFor(model => model.RequestedComputer.Price)</td>
+                <td>@Html.DisplayFor(model => model.RecommendedComputer.Price)</td>
+                <td>@(Model.RecommendedComputer.Price - Model.RequestedComputer.Price)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row justify-content-end">
+            <div class="col-md-4">
+              <a class="btn btn-primary btn-block" asp-controller="Computer" asp-action="Details" asp-route-id="@Model.RecommendedComputer.Id" asp-route-recommended="@true">Buy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

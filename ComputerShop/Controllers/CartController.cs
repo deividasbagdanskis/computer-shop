@@ -30,9 +30,9 @@ namespace ComputerShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(int id, [Bind("quantity")] int quantity)
+        public async Task<IActionResult> AddToCart(string id, [Bind("quantity")] int quantity)
         {
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Computer.FindAsync(id);
 
             product.Category = await _context.Category.SingleAsync(c => c.Id == product.CategoryId);
 
@@ -58,7 +58,7 @@ namespace ComputerShop.Controllers
                 {
                     cart.Add(new CartItem()
                     {
-                        Id = product.Id,
+                        Id = new Guid().ToString(),
                         Name = product.Name,
                         Image = product.Image,
                         Price = product.Price,
@@ -78,7 +78,7 @@ namespace ComputerShop.Controllers
             return RedirectToAction("Index", "Product", new { category = product.Category.Name });
         }
 
-        public IActionResult IncreaseQuantity(int id)
+        public IActionResult IncreaseQuantity(string id)
         {
             List<CartItem> cart = SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart");
             
@@ -96,7 +96,7 @@ namespace ComputerShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult DecreaseQuantity(int id)
+        public IActionResult DecreaseQuantity(string id)
         {
             List<CartItem> cart = SessionHelper.ReadFromSession<List<CartItem>>(HttpContext.Session, "cart");
 
@@ -123,7 +123,7 @@ namespace ComputerShop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private int exists(int id, List<CartItem> cart)
+        private int exists(string id, List<CartItem> cart)
         {
             for (int i = 0; i < cart.Count; i++)
             {
